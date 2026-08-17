@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 
 # Configuração das chaves API's dos clientes da Tatica
 
@@ -7,9 +8,8 @@ CLIENTES = {
     "dr mikle": os.environ["NIBO_KEY_DR_MIKLE"]
 }
 
-NIBO_ROUTES = {
-    "contas_recebidas": "https://api.nibo.com.br/empresas/v1/receipts",
-    "contas_pagas": "https://api.nibo.com.br/empresas/v1/payments",
-    "contas_a_pagar": "https://api.nibo.com.br/empresas/v1/schedules/debit/opened",
-    "contas_a_receber": "https://api.nibo.com.br/empresas/v1/schedules/credit"
-}
+class NiboRoutes(Enum): 
+    CONTAS_RECEBIDAS = "https://api.nibo.com.br/empresas/v1/receipts"
+    CONTAS_PAGAS = "https://api.nibo.com.br/empresas/v1/payments"
+    CONTAS_A_PAGAR = "https://api.nibo.com.br/empresas/v1/schedules/debit/opened"
+    CONTAS_A_RECEBER = "https://api.nibo.com.br/empresas/v1/schedules/credit"
