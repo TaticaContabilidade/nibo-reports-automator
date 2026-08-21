@@ -10,9 +10,9 @@ SCHEDULED_ROUTES = {NiboRoutes.CONTAS_A_PAGAR, NiboRoutes.CONTAS_A_RECEBER}
 HISTORICAL_ROUTES = {NiboRoutes.CONTAS_RECEBIDAS, NiboRoutes.CONTAS_PAGAS}
 
 
-def mock_all_routes(requests_mock, json_body=None):
-    """Registers a mocked response for all 4 real NiboRoutes."""
-    body = json_body if json_body is not None else {}
+def mock_all_routes(requests_mock, items=None):
+    """Registers a mocked {"items": [...]} response for all 4 real NiboRoutes."""
+    body = {"items": items if items is not None else []}
     for route in NiboRoutes:
         requests_mock.get(route.value, json=body, status_code=200)
 
@@ -33,14 +33,26 @@ def test_unknown_client_raises_key_error():
         RouteRequest("unknown_client")
 
 
-def test_routes_requests_returns_one_response_per_route(requests_mock):
-    mock_all_routes(requests_mock, json_body={"contas": []})
+def test_routes_requests_returns_mapped_items_from_all_routes(requests_mock):
+    """routes_requests() ja devolve os itens mapeados (via mapear()), nao o
+    JSON cru - o resultado e uma lista achatada de itens, nao uma resposta
+    por rota."""
+    item = {
+        "description": "Boleto teste",
+        "value": 100.0,
+        "openValue": 100.0,
+        "dueDate": "2026-11-15T00:00:00Z",
+        "stakeholder": {"name": "Fornecedor Teste"},
+        "category": {"name": "Categoria Teste"},
+        "isPaid": False,
+    }
+    mock_all_routes(requests_mock, items=[item])
 
     client = RouteRequest("eva clinica")
     result = client.routes_requests()
 
     assert isinstance(result, list)
-    assert len(result) == 4
+    assert len(result) == 4  # 1 item mockado x 4 rotas
 
 
 def test_sends_apitoken_header_on_every_request(requests_mock):
@@ -109,7 +121,7 @@ def test_api_error_response_raises_auth_error(requests_mock):
         if route == NiboRoutes.CONTAS_A_PAGAR:
             requests_mock.get(route.value, json={"error": "unauthorized"}, status_code=401)
         else:
-            requests_mock.get(route.value, json={}, status_code=200)
+            requests_mock.get(route.value, json={"items": []}, status_code=200)
 
     client = RouteRequest("eva clinica")
 

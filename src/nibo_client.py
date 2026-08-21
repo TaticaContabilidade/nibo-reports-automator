@@ -1,9 +1,11 @@
-import requests
 from datetime import datetime, timedelta
 from typing import Any
 from src.config import CLIENTES, NiboRoutes
 from logs.authentication_logs import NiboAuthError, NiboTimeoutError
+from src.userful.map_dict import mapear
+import requests
 import time
+
 
 MAX_TRY = 3
 
@@ -32,7 +34,8 @@ class RouteRequest:
         Em caso de timeout, a requisicao e reprocessada via `retry_requests`.
 
         Returns:
-            Lista com o corpo JSON de cada rota, na ordem de NiboRoutes.
+            Lista achatada com os itens de todas as rotas ja mapeados
+            (ver src/userful/map_dict.py), sem separacao por rota.
 
         Raises:
             NiboAuthError: se a API responder 401 (token invalido/expirado).
@@ -62,7 +65,7 @@ class RouteRequest:
             if response.status_code == 401:
                 raise NiboAuthError(f"Token Expirado/Inválido: {route.name}")
 
-            data.append(response.json())
+            data.extend(mapear(route, response.json()))
 
         return data
 
