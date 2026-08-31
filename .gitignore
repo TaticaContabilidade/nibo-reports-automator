@@ -4,3 +4,7 @@
 __pycache__/
 *.pyc
 .vscode
+docs
+relatorios/
+userful/__pycache__
+CLAUDE.md
