@@ -23,9 +23,9 @@ def test_instance_loads_token_for_eva_clinica():
     assert len(client.routes) == 4
 
 
-def test_instance_loads_token_for_dr_mikle():
-    client = RouteRequest("dr mikle")
-    assert client.api_token == "token-fake-dr-mikle"
+def test_instance_loads_token_for_santos_e_nogueira():
+    client = RouteRequest("santos e nogueira")
+    assert client.api_token == "token-fake-santos-e-nogueira"
 
 
 def test_unknown_client_raises_key_error():

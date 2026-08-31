@@ -5,4 +5,4 @@ import os
 # (the first time it's imported). conftest.py is loaded by pytest
 # before test module collection, which guarantees the right order.
 os.environ.setdefault("NIBO_KEY_EVA_CLINICA", "token-fake-eva-clinica")
-os.environ.setdefault("NIBO_KEY_DR_MIKLE", "token-fake-dr-mikle")
+os.environ.setdefault("NIBO_KEY_SANTOS_E_NOGUEIRA", "token-fake-santos-e-nogueira")
