@@ -206,7 +206,7 @@ def _build_report(
     ])
 
 
-def generate_reports(data: list[dict[str, Any]], company_name: str, output_dir: str = "relatorios") -> None:
+def generate_reports(data: list[dict[str, Any]], company_name: str, output_dir: str = "relatorios") -> str:
     """Generate the 4 NIBO reports (contas a pagar/a receber/pagas/recebidas) for one company.
 
     Groups the already-mapped items (see src/userful/map_dict.py) by route and
@@ -215,6 +215,7 @@ def generate_reports(data: list[dict[str, Any]], company_name: str, output_dir: 
     generated_at = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     company_dir = os.path.join(output_dir, company_name.replace(" ", "_"))
     os.makedirs(company_dir, exist_ok=True)
+    filename: str = []
 
     items_by_route: dict[NiboRoutes, list[dict[str, Any]]] = defaultdict(list)
     for item in data:
@@ -224,3 +225,6 @@ def generate_reports(data: list[dict[str, Any]], company_name: str, output_dir: 
     for route, spec in REPORT_SPECS.items():
         file_path = os.path.join(company_dir, f"{spec['file_name']}.pdf")
         _build_report(items_by_route.get(route, []), spec, company_name, generated_at, file_path)
+        filename.append(file_path)
+
+    return filename 
