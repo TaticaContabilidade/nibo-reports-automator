@@ -4,14 +4,21 @@ from src.config import CLIENTES
 from typing import Any
 from logs.authentication_logs import NiboAuthError 
 from src.userful.generating_documents import generate_reports
+from src.send_email import SendEmail
+
+
 
 def main():
   data_client: list[dict[str, Any]] = []
+  file_path: str = ""
+  i: int = 0
+  email = SendEmail()
 
   for client in CLIENTES:
     try:
       data_client = RouteRequest(client).routes_requests()
-      generate_reports(data_client, client)
+      file_path = generate_reports(data_client, client)
+      email.send_email(file_path, client)
     except NiboAuthError as error:
       logging.error(f"Erro na autenticacao ({client}): {error}")
       continue
