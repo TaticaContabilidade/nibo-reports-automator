@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import Any
 from src.config import CLIENTES, NiboRoutes
 from logs.authentication_logs import NiboAuthError, NiboTimeoutError
-from src.userful.map_dict import mapear
+from src.userful.map_dict import map_items
 import requests
 import time
 
@@ -65,7 +65,7 @@ class RouteRequest:
             if response.status_code == 401:
                 raise NiboAuthError(f"Token Expirado/Inválido: {route.name}")
 
-            data.extend(mapear(route, response.json()))
+            data.extend(map_items(route, response.json()))
 
         return data
 
